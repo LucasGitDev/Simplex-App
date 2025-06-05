@@ -1,15 +1,19 @@
-import type { Problem } from "@/types/simplex"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { generateShortNames } from "@/lib/problem"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import type { Problem } from "@/types/simplex";
 
 interface ProblemDisplayProps {
-  problem: Problem
+  problem: Problem;
 }
 
 export function ProblemDisplay({ problem }: ProblemDisplayProps) {
-  const shortNames = generateShortNames(problem.variableNames)
-
   return (
     <Card>
       <CardHeader>
@@ -25,7 +29,8 @@ export function ProblemDisplay({ problem }: ProblemDisplayProps) {
                 <span key={i}>
                   {i > 0 && coeff >= 0 && "+ "}
                   {coeff < 0 && "- "}
-                  {Math.abs(coeff)}{"*"}
+                  {Math.abs(coeff)}
+                  {"*"}
                   {problem.variableNames[i]}{" "}
                 </span>
               ))}
@@ -62,7 +67,9 @@ export function ProblemDisplay({ problem }: ProblemDisplayProps) {
         </div>
 
         <div>
-          <h3 className="text-lg font-medium mb-2">Forma Padrão (com folgas)</h3>
+          <h3 className="text-lg font-medium mb-2">
+            Forma Padrão (com folgas)
+          </h3>
           <Table>
             <TableHeader>
               <TableRow>
@@ -96,5 +103,5 @@ export function ProblemDisplay({ problem }: ProblemDisplayProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

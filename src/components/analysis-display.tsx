@@ -1,14 +1,21 @@
-import type { Problem, Solution, AnalysisResult } from "@/types/simplex"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import type { AnalysisResult, Problem, Solution } from "@/types/simplex";
 
 interface AnalysisDisplayProps {
-  analysis: AnalysisResult
-  problem: Problem
-  solution: Solution
+  analysis: AnalysisResult;
+  problem: Problem;
+  solution: Solution;
 }
 
-export function AnalysisDisplay({ analysis, problem, solution }: AnalysisDisplayProps) {
+export function AnalysisDisplay({ analysis, problem }: AnalysisDisplayProps) {
   return (
     <Card>
       <CardHeader>
@@ -46,14 +53,16 @@ export function AnalysisDisplay({ analysis, problem, solution }: AnalysisDisplay
         <div>
           <h3 className="text-lg font-medium mb-2">Explicações</h3>
           <div className="space-y-2">
-            {Object.entries(analysis.explanations).map(([name, explanation]) => (
-              <div key={name} className="p-4 bg-gray-50 rounded-md">
-                <p dangerouslySetInnerHTML={{ __html: explanation }} />
-              </div>
-            ))}
+            {Object.entries(analysis.explanations).map(
+              ([name, explanation]) => (
+                <div key={name} className="p-4 bg-gray-50 rounded-md">
+                  <p dangerouslySetInnerHTML={{ __html: explanation }} />
+                </div>
+              )
+            )}
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

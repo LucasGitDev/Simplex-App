@@ -1,21 +1,33 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface TableauDisplayProps {
-  tableau: number[][]
-  variableNames: string[]
-  constraintNames: string[]
+  tableau: number[][];
+  variableNames: string[];
+  constraintNames: string[];
 }
 
-export function TableauDisplay({ tableau, variableNames, constraintNames }: TableauDisplayProps) {
-  const numVars = variableNames.length
-  const numConstraints = constraintNames.length
-
+export function TableauDisplay({
+  tableau,
+  variableNames,
+  constraintNames,
+}: TableauDisplayProps) {
   // Gerar nomes para as colunas do tableau
-  const columnNames = [...variableNames, ...constraintNames.map((_, i) => `s${i + 1}`), "RHS"]
+  const columnNames = [
+    ...variableNames,
+    ...constraintNames.map((_, i) => `s${i + 1}`),
+    "RHS",
+  ];
 
   // Gerar nomes para as linhas do tableau
-  const rowNames = [...constraintNames, "Z"]
+  const rowNames = [...constraintNames, "Z"];
 
   return (
     <Card>
@@ -35,7 +47,10 @@ export function TableauDisplay({ tableau, variableNames, constraintNames }: Tabl
             </TableHeader>
             <TableBody>
               {tableau.map((row, i) => (
-                <TableRow key={i} className={i === tableau.length - 1 ? "font-bold" : ""}>
+                <TableRow
+                  key={i}
+                  className={i === tableau.length - 1 ? "font-bold" : ""}
+                >
                   <TableCell>{rowNames[i]}</TableCell>
                   {row.map((value, j) => (
                     <TableCell key={j}>{value.toFixed(4)}</TableCell>
@@ -47,5 +62,5 @@ export function TableauDisplay({ tableau, variableNames, constraintNames }: Tabl
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
