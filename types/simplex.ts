@@ -19,3 +19,7 @@ export interface AnalysisResult {
   shadowPrices: number[];
   explanations: Record<string, string>;
 }
+
+export interface ChangeProblem {
+  constraintNewRhs: number[];
+}

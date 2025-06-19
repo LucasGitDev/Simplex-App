@@ -7,10 +7,13 @@ import { ProblemDisplay } from "@/components/problem-display"
 import { TableauDisplay } from "@/components/tableau-display"
 import { SolutionDisplay } from "@/components/solution-display"
 import { AnalysisDisplay } from "@/components/analysis-display"
-import type { Problem, Solution, AnalysisResult } from "@/types/simplex"
+import type { Problem, Solution, AnalysisResult, ChangeProblem } from "@/types/simplex"
 import { simplex } from "@/lib/solver"
 import { analyzeTableau } from "@/lib/analysis"
 import { getVenixProblem } from "@/lib/problems"
+import { ChangeForm } from "@/components/change-form"
+import { changeSimplex } from "@/lib/change-problem"
+import { ChangeAnalysisDisplay } from "./change-display"
 
 export function SimplexSolver() {
   const [problem, setProblem] = useState<Problem | null>(null)
@@ -34,6 +37,16 @@ export function SimplexSolver() {
       setError(err instanceof Error ? err.message : "Erro ao resolver o problema")
       setSolution(null)
       setAnalysis(null)
+    }
+  }
+
+  const handleChangeProblem = (changeProblem: ChangeProblem) => {
+    try {
+      solution &&
+        changeSimplex(solution, changeProblem)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao resolver o problema")
+
     }
   }
 
@@ -62,7 +75,7 @@ export function SimplexSolver() {
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="problem">Problema</TabsTrigger>
           <TabsTrigger value="solution" disabled={!solution}>
             Solução
@@ -73,11 +86,21 @@ export function SimplexSolver() {
           <TabsTrigger value="analysis" disabled={!analysis}>
             Análise
           </TabsTrigger>
+          <TabsTrigger value="change" disabled={!solution}>
+            Alteração
+          </TabsTrigger>
+          <TabsTrigger value="change-solution" disabled={!solution}>
+            Alteração solução
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="problem" className="space-y-6">
           <ProblemForm onSubmit={handleSolveProblem} initialProblem={problem} />
           {problem && <ProblemDisplay problem={problem} />}
+        </TabsContent>
+
+        <TabsContent value="change" className="space-y-6">
+          {problem && <ChangeForm onSubmit={handleChangeProblem} problem={problem} />}
         </TabsContent>
 
         <TabsContent value="solution">
@@ -98,6 +121,10 @@ export function SimplexSolver() {
           {analysis && problem && solution && (
             <AnalysisDisplay analysis={analysis} problem={problem} solution={solution} />
           )}
+        </TabsContent>
+
+        <TabsContent value="change-solution" className="space-y-6">
+          {solution && problem && <ChangeAnalysisDisplay />}
         </TabsContent>
       </Tabs>
     </div>

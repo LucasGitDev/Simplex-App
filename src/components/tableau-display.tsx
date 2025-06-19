@@ -19,6 +19,7 @@ export function TableauDisplay({
   variableNames,
   constraintNames,
 }: TableauDisplayProps) {
+  console.log(constraintNames)
   // Gerar nomes para as colunas do tableau
   const columnNames = [
     ...variableNames,
