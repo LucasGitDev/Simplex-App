@@ -1,49 +1,69 @@
-import type { ChangeProblem, Solution } from "@/types/simplex";
-import { getStandardObjective } from "./problem";
-import {
-  choosePivot,
-  extractSolution,
-  initializeTableau,
-  pivotOperation,
-} from "./tableau";
+import type { ChangeAnalysisResult, ChangeProblem, Solution } from "@/types/simplex";
 
-export function changeSimplex(solution: Solution, changeProblem: ChangeProblem): any {
+export function changeSimplex(
+  solution: Solution,
+  changeProblem: ChangeProblem
+): ChangeAnalysisResult {
   type Tableau = number[][];
 
-  function verificarRestricoes(tableau: Tableau, deltas: number[]): boolean {
-    for (let i = 0; i < tableau.length - 1; i++) {
-      let soma = 0;
-      for (let j = 0; j < deltas.length; j++) {
-        soma += tableau[i][j] * deltas[j];
-      }
-      soma += tableau[i][tableau[i].length - 1];  // Lado direito (b)
-      console.log(`Restrição ${i + 1}: Soma = ${soma} >= 0 ?`, soma >= 0);
-      if (soma < 0) return false;
-    }
-    return true;
-  }
-
-  function calcularLucro(tableau: Tableau, deltas: number[]): number {
-    const linhaObjetivo = tableau[tableau.length - 1];
-    let lucro = 0;
-    for (let j = 0; j < deltas.length; j++) {
-      console.log(linhaObjetivo[j], '*', deltas[j])
-      lucro += linhaObjetivo[j] * deltas[j];
-    }
-    lucro += linhaObjetivo[linhaObjetivo.length - 1];  // Termo constante (17500)
-    return lucro;
-  }
-
-  // Seu tableau (exemplo vindo da imagem)
-
-  const reducedTableau: Tableau = solution.tableau.map(row =>
+  const reducedTableau: Tableau = solution.tableau.map((row) =>
     row.slice((changeProblem.constraintNewRhs.length + 1) * -1)
   );
-  console.log(reducedTableau)
-  // Tentativa inicial: Dobrar o estoque de tábuas (∆1 = 250, ∆2 = 0, ∆3 = 0)
 
-  console.log("\n--- Tentativa 1 ---");
-  const viavel1 = verificarRestricoes(reducedTableau, changeProblem.constraintNewRhs);
-  console.log("Viável?", viavel1);
-  console.log("Lucro:", calcularLucro(reducedTableau, changeProblem.constraintNewRhs));
+  const deltas = changeProblem.constraintNewRhs;
+  const linhaZ = reducedTableau[reducedTableau.length - 1];
+
+  const constraintsResults: ChangeAnalysisResult["constraintsResults"] = [];
+
+  // Analisar as restrições
+  for (let i = 0; i < reducedTableau.length - 1; i++) {
+    let soma = 0;
+    const termos: string[] = [];
+
+    for (let j = 0; j < deltas.length; j++) {
+      const coef = reducedTableau[i][j];
+      const delta = deltas[j];
+      soma += coef * delta;
+      termos.push(`${coef.toFixed(2)}*(${delta})`);
+    }
+
+    const rhs = reducedTableau[i][reducedTableau[i].length - 1];
+    soma += rhs;
+    termos.push(`${rhs}`);
+
+    constraintsResults.push({
+      constraint: `Restrição ${i + 1}`,
+      expression: termos.join(" + "),
+      result: soma,
+      satisfied: soma >= 0,
+    });
+  }
+
+  // Calcular o lucro
+  let lucroTotal = 0;
+  const lucroTermos: string[] = [];
+
+  for (let j = 0; j < deltas.length; j++) {
+    const coef = linhaZ[j];
+    const delta = deltas[j];
+    const produto = coef * delta;
+    lucroTotal += produto;
+    lucroTermos.push(`${coef.toFixed(2)}*(${delta})`);
+  }
+
+  const zOriginal = linhaZ[linhaZ.length - 1];
+  lucroTotal += zOriginal;
+  lucroTermos.push(`${zOriginal}`);
+
+  const lucroExpressao = `${lucroTermos.join(" + ")} = R$ ${lucroTotal}`;
+
+  // Verificar se todas as restrições estão satisfeitas
+  const viavel = constraintsResults.every((r) => r.satisfied);
+
+  return {
+    constraintsResults,
+    lucroExpressao,
+    lucroTotal,
+    viavel,
+  };
 }

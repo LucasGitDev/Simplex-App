@@ -7,18 +7,20 @@ import { ProblemDisplay } from "@/components/problem-display"
 import { TableauDisplay } from "@/components/tableau-display"
 import { SolutionDisplay } from "@/components/solution-display"
 import { AnalysisDisplay } from "@/components/analysis-display"
-import type { Problem, Solution, AnalysisResult, ChangeProblem } from "@/types/simplex"
+import { ChangeAnalysisDisplay } from "@/components/change-display"
+import type { Problem, Solution, AnalysisResult, ChangeProblem, ChangeAnalysisResult } from "@/types/simplex"
 import { simplex } from "@/lib/solver"
 import { analyzeTableau } from "@/lib/analysis"
 import { getVenixProblem } from "@/lib/problems"
 import { ChangeForm } from "@/components/change-form"
 import { changeSimplex } from "@/lib/change-problem"
-import { ChangeAnalysisDisplay } from "./change-display"
+
 
 export function SimplexSolver() {
   const [problem, setProblem] = useState<Problem | null>(null)
   const [solution, setSolution] = useState<Solution | null>(null)
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
+  const [changeSolution, setChangeSolution] = useState<ChangeAnalysisResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("problem")
 
@@ -42,8 +44,12 @@ export function SimplexSolver() {
 
   const handleChangeProblem = (changeProblem: ChangeProblem) => {
     try {
-      solution &&
-        changeSimplex(solution, changeProblem)
+      if (solution) {
+        const result = changeSimplex(solution, changeProblem)
+        setChangeSolution(result)
+        setActiveTab("change-solution")
+      }
+
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao resolver o problema")
 
@@ -87,10 +93,10 @@ export function SimplexSolver() {
             Análise
           </TabsTrigger>
           <TabsTrigger value="change" disabled={!solution}>
-            Alteração
+            Alterar Recursos
           </TabsTrigger>
-          <TabsTrigger value="change-solution" disabled={!solution}>
-            Alteração solução
+          <TabsTrigger value="change-solution" disabled={!solution || !changeSolution}>
+            Solução da Alteração
           </TabsTrigger>
         </TabsList>
 
@@ -124,7 +130,7 @@ export function SimplexSolver() {
         </TabsContent>
 
         <TabsContent value="change-solution" className="space-y-6">
-          {solution && problem && <ChangeAnalysisDisplay />}
+          {changeSolution && <ChangeAnalysisDisplay changeSolution={changeSolution} />}
         </TabsContent>
       </Tabs>
     </div>

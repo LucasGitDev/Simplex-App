@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -34,7 +34,7 @@ export function ChangeForm({ onSubmit, problem }: ChangeFormProps) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Restrições atuais</CardTitle>
+          <CardTitle>Situação Atual dos Recursos</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -50,8 +50,8 @@ export function ChangeForm({ onSubmit, problem }: ChangeFormProps) {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Restrições</h3>
-          <div className={`grid grid-cols-${constraintRhs.length} gap-2 items-end`}>
+          <h3 className="text-lg font-medium">	Alterações Propostas nos Recursos</h3>
+          <div className={`grid grid-cols-5 gap-2 items-end`}>
             {problem.constraintNames.map((row, i) => (
               <div key={`constraint-${i}`} className="space-y-2 p-4 border rounded-md">
                 <div className="space-y-1">
@@ -72,7 +72,7 @@ export function ChangeForm({ onSubmit, problem }: ChangeFormProps) {
         </div>
 
         <Button type="submit" className="w-full">
-          Resolver
+          Recalcular
         </Button>
       </form>
     </>

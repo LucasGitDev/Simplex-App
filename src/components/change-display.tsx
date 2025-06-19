@@ -8,48 +8,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface ChangeAnalysisResult {
-  constraintsResults: {
-    constraint: string;
-    expression: string;
-    result: number;
-    satisfied: boolean;
-  }[];
-  lucroExpressao: string; // Nova string contendo o cálculo detalhado do lucro
-  lucroTotal: number;
-  viavel: boolean;
-}
+import { ChangeAnalysisResult } from "@/types/simplex";
 
 interface ChangeAnalysisDisplayProps {
-
+  changeSolution: ChangeAnalysisResult
 }
 
-export function ChangeAnalysisDisplay({ }: ChangeAnalysisDisplayProps) {
-  const result: ChangeAnalysisResult = {
-    constraintsResults: [
-      {
-        constraint: "Restrição 1",
-        expression: `2*(250) - 0.5*(0) + 250`,
-        result: 750,
-        satisfied: true,
-      },
-      {
-        constraint: "Restrição 2",
-        expression: `-1*(250) + 0 + 350`,
-        result: 100,
-        satisfied: true,
-      },
-      {
-        constraint: "Restrição 3",
-        expression: `-1*(250) + 0.5*(0)`,
-        result: -250,
-        satisfied: false,
-      },
-    ],
-    lucroExpressao: `40*(250) + 0*(0) + 15*(0) + 17500 = R$ 27500`,
-    lucroTotal: 27500,
-    viavel: false,
-  };
+export function ChangeAnalysisDisplay({ changeSolution }: ChangeAnalysisDisplayProps) {
+
   return (
     <Card>
       <CardHeader>
@@ -69,7 +35,7 @@ export function ChangeAnalysisDisplay({ }: ChangeAnalysisDisplayProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {result.constraintsResults.map((res, index) => (
+              {changeSolution.constraintsResults.map((res, index) => (
                 <TableRow key={index}>
                   <TableCell>{res.constraint}</TableCell>
                   <TableCell>{res.expression}</TableCell>
@@ -90,7 +56,7 @@ export function ChangeAnalysisDisplay({ }: ChangeAnalysisDisplayProps) {
 
         <div>
           <h3 className="text-lg font-medium mb-2">Cálculo do Novo Lucro</h3>
-          <p className="text-base">{result.lucroExpressao}</p>
+          <p className="text-base">{changeSolution.lucroExpressao}</p>
         </div>
 
 
@@ -98,7 +64,7 @@ export function ChangeAnalysisDisplay({ }: ChangeAnalysisDisplayProps) {
         <div>
           <p className="text-lg">
             Situação da Alteração:{" "}
-            {result.viavel ? (
+            {changeSolution.viavel ? (
               <span className="text-green-600">Viável</span>
             ) : (
               <span className="text-red-600">Não Viável</span>
