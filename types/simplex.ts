@@ -19,3 +19,19 @@ export interface AnalysisResult {
   shadowPrices: number[];
   explanations: Record<string, string>;
 }
+
+export interface ChangeProblem {
+  constraintNewRhs: number[];
+}
+
+export interface ChangeAnalysisResult {
+  constraintsResults: {
+    constraint: string;
+    expression: string;
+    result: number;
+    satisfied: boolean;
+  }[];
+  lucroExpressao: string;
+  lucroTotal: number;
+  viavel: boolean;
+}
