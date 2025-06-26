@@ -12,6 +12,7 @@ export function getVenixProblem(): Problem {
     constraintNames: ["Usinagem", "Pintura", "Montagem"],
     variableNames: ["Carrinhos", "Triciclos"],
     maximize: true,
+    constraintSigns: ["≤", "≤", "≤"],
   };
 }
 
@@ -27,5 +28,6 @@ export function get14demaio(): Problem {
     constraintNames: ["A", "B", "C"],
     variableNames: ["x1", "x2", "x3"],
     maximize: true,
+    constraintSigns: ["≤", "≤", "≤"],
   };
 }

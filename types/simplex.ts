@@ -5,6 +5,7 @@ export interface Problem {
   constraintNames: string[];
   variableNames: string[];
   maximize: boolean;
+  constraintSigns: string[]; // "≤", "≥", "="
 }
 
 export interface Solution {
