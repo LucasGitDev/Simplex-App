@@ -128,7 +128,7 @@ export function SimplexSolver() {
             <ChangeForm
               onSubmit={handleChangeProblem}
               problem={problem}
-              solution={solution}
+              solution={solution || null}
             />
           )}
         </TabsContent>
@@ -142,7 +142,7 @@ export function SimplexSolver() {
         <TabsContent value="tableau">
           {solution && problem && (
             <TableauDisplay
-              tableau={solution.tableau}
+              tableauHistory={solution.tableauHistory}
               variableNames={problem.variableNames}
               constraintNames={problem.constraintNames}
             />

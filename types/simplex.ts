@@ -12,6 +12,7 @@ export interface Solution {
   optimalValue: number;
   tableau: number[][];
   iteration: number;
+  tableauHistory: number[][][];
 }
 
 export interface AnalysisResult {

@@ -11,8 +11,10 @@ export function simplex(problem: Problem): Solution {
   const c = getStandardObjective(problem);
   const A = problem.constraintMatrix;
   const b = problem.constraintRhs;
+  const tableauHistory: number[][][] = [];
 
   let tableau = initializeTableau(c, A, b);
+  tableauHistory.push(tableau);
   let iteration = 0;
 
   while (true) {
@@ -43,6 +45,7 @@ export function simplex(problem: Problem): Solution {
     // Realizar operação de pivoteamento
     tableau = pivotOperation(tableau, pivotRow, pivotCol);
     iteration++;
+    tableauHistory.push(tableau);
   }
 
   const [solution, optimalValue] = extractSolution(tableau, A[0].length);
@@ -52,5 +55,6 @@ export function simplex(problem: Problem): Solution {
     optimalValue,
     tableau,
     iteration,
+    tableauHistory,
   };
 }

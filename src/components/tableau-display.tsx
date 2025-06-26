@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/table";
 
 interface TableauDisplayProps {
-  tableau: number[][];
   variableNames: string[];
   constraintNames: string[];
+  tableauHistory: number[][][];
 }
 
 export function TableauDisplay({
-  tableau,
+  tableauHistory,
   variableNames,
   constraintNames,
 }: TableauDisplayProps) {
@@ -30,37 +30,44 @@ export function TableauDisplay({
   const rowNames = [...constraintNames, "Z"];
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Tableau Final</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Base</TableHead>
-                {columnNames.map((name, i) => (
-                  <TableHead key={i}>{name}</TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tableau.map((row, i) => (
-                <TableRow
-                  key={i}
-                  className={i === tableau.length - 1 ? "font-bold" : ""}
-                >
-                  <TableCell>{rowNames[i]}</TableCell>
-                  {row.map((value, j) => (
-                    <TableCell key={j}>{value.toFixed(4)}</TableCell>
+    <>
+      {tableauHistory.map((tableau, i) => (
+        <Card key={i} className="mb-4">
+          <CardHeader>
+            <CardTitle>
+              Tableau{" "}
+              {i + 1 === tableauHistory.length ? "Final" : `Interação ${i + 1}`}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Base</TableHead>
+                    {columnNames.map((name, i) => (
+                      <TableHead key={i}>{name}</TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tableau.map((row, i) => (
+                    <TableRow
+                      key={i}
+                      className={i === tableau.length - 1 ? "font-bold" : ""}
+                    >
+                      <TableCell>{rowNames[i]}</TableCell>
+                      {row.map((value, j) => (
+                        <TableCell key={j}>{value.toFixed(4)}</TableCell>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </>
   );
 }
