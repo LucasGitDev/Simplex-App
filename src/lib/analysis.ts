@@ -76,6 +76,14 @@ export function explainAnalysis(
   return explanations;
 }
 
+export function isActive(
+  tableau: number[][],
+  constraintIndex: number
+): boolean {
+  const binding = getBindingConstraints(tableau);
+  return binding.includes(constraintIndex);
+}
+
 /**
  * Realiza a análise completa do tableau final.
  */

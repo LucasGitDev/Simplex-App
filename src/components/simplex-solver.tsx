@@ -124,8 +124,12 @@ export function SimplexSolver() {
         </TabsContent>
 
         <TabsContent value="change" className="space-y-6">
-          {problem && (
-            <ChangeForm onSubmit={handleChangeProblem} problem={problem} />
+          {problem && solution && (
+            <ChangeForm
+              onSubmit={handleChangeProblem}
+              problem={problem}
+              solution={solution}
+            />
           )}
         </TabsContent>
 
