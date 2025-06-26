@@ -10,7 +10,7 @@ import { TableauDisplay } from "@/components/tableau-display";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { analyzeTableau } from "@/lib/analysis";
 import { changeSimplex } from "@/lib/change-problem";
-import { getVenixProblem } from "@/lib/problems";
+import { get14demaio, getVenixProblem } from "@/lib/problems";
 import { simplex } from "@/lib/solver";
 import type {
   AnalysisResult,
@@ -77,6 +77,12 @@ export function SimplexSolver() {
     setActiveTab("problem");
   };
 
+  const handleLoadExample2 = () => {
+    const exampleProblem = get14demaio();
+    setProblem(exampleProblem);
+    setActiveTab("problem");
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
@@ -84,7 +90,13 @@ export function SimplexSolver() {
           onClick={handleLoadExample}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          Carregar Exemplo
+          Carregar Exemplo 1
+        </button>
+        <button
+          onClick={handleLoadExample2}
+          className="ml-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        >
+          Carregar Exemplo 2
         </button>
       </div>
 

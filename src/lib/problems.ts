@@ -1,4 +1,4 @@
-import type { Problem } from "@/types/simplex"
+import type { Problem } from "@/types/simplex";
 
 export function getVenixProblem(): Problem {
   return {
@@ -12,5 +12,20 @@ export function getVenixProblem(): Problem {
     constraintNames: ["Usinagem", "Pintura", "Montagem"],
     variableNames: ["Carrinhos", "Triciclos"],
     maximize: true,
-  }
+  };
+}
+
+export function get14demaio(): Problem {
+  return {
+    objectiveCoeffs: [3, 2, 5],
+    constraintMatrix: [
+      [1, 2, 1],
+      [3, 0, 2],
+      [1, 4, 0],
+    ],
+    constraintRhs: [430, 460, 420],
+    constraintNames: ["A", "B", "C"],
+    variableNames: ["x1", "x2", "x3"],
+    maximize: true,
+  };
 }

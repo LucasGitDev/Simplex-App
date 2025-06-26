@@ -82,7 +82,6 @@ export function ChangeForm({ onSubmit, problem, solution }: ChangeFormProps) {
                     onChange={(e) =>
                       handleConstraintRhsChange(i, e.target.value)
                     }
-                    disabled={!isActive(solution.tableau, i)}
                   />
                 </div>
               </div>
