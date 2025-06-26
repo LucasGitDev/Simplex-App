@@ -291,7 +291,6 @@ export function ProblemForm({ onSubmit, initialProblem }: ProblemFormProps) {
                   }
                 >
                   <option value="≤">≤</option>
-                  <option value="=">=</option>
                   <option value="≥">≥</option>
                 </select>
               </div>
