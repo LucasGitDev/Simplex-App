@@ -1,8 +1,13 @@
-import type { ChangeAnalysisResult, ChangeProblem, Solution } from "@/types/simplex";
+import type {
+  ChangeAnalysisResult,
+  ChangeProblem,
+  Solution,
+} from "@/types/simplex";
 
 export function changeSimplex(
   solution: Solution,
-  changeProblem: ChangeProblem
+  changeProblem: ChangeProblem,
+  constraintNames: string[]
 ): ChangeAnalysisResult {
   type Tableau = number[][];
 
@@ -32,7 +37,7 @@ export function changeSimplex(
     termos.push(`${rhs}`);
 
     constraintsResults.push({
-      constraint: `Restrição ${i + 1}`,
+      constraint: constraintNames[i],
       expression: termos.join(" + "),
       result: soma,
       satisfied: soma >= 0,

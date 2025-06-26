@@ -1,66 +1,81 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ProblemForm } from "@/components/problem-form"
-import { ProblemDisplay } from "@/components/problem-display"
-import { TableauDisplay } from "@/components/tableau-display"
-import { SolutionDisplay } from "@/components/solution-display"
-import { AnalysisDisplay } from "@/components/analysis-display"
-import { ChangeAnalysisDisplay } from "@/components/change-display"
-import type { Problem, Solution, AnalysisResult, ChangeProblem, ChangeAnalysisResult } from "@/types/simplex"
-import { simplex } from "@/lib/solver"
-import { analyzeTableau } from "@/lib/analysis"
-import { getVenixProblem } from "@/lib/problems"
-import { ChangeForm } from "@/components/change-form"
-import { changeSimplex } from "@/lib/change-problem"
-
+import { AnalysisDisplay } from "@/components/analysis-display";
+import { ChangeAnalysisDisplay } from "@/components/change-display";
+import { ChangeForm } from "@/components/change-form";
+import { ProblemDisplay } from "@/components/problem-display";
+import { ProblemForm } from "@/components/problem-form";
+import { SolutionDisplay } from "@/components/solution-display";
+import { TableauDisplay } from "@/components/tableau-display";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { analyzeTableau } from "@/lib/analysis";
+import { changeSimplex } from "@/lib/change-problem";
+import { getVenixProblem } from "@/lib/problems";
+import { simplex } from "@/lib/solver";
+import type {
+  AnalysisResult,
+  ChangeAnalysisResult,
+  ChangeProblem,
+  Problem,
+  Solution,
+} from "@/types/simplex";
+import { useState } from "react";
 
 export function SimplexSolver() {
-  const [problem, setProblem] = useState<Problem | null>(null)
-  const [solution, setSolution] = useState<Solution | null>(null)
-  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
-  const [changeSolution, setChangeSolution] = useState<ChangeAnalysisResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState("problem")
+  const [problem, setProblem] = useState<Problem | null>(null);
+  const [solution, setSolution] = useState<Solution | null>(null);
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+  const [changeSolution, setChangeSolution] =
+    useState<ChangeAnalysisResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("problem");
 
   const handleSolveProblem = (problem: Problem) => {
     try {
-      setProblem(problem)
-      const solutionResult = simplex(problem)
-      setSolution(solutionResult)
+      setProblem(problem);
+      const solutionResult = simplex(problem);
+      setSolution(solutionResult);
 
-      const analysisResult = analyzeTableau(solutionResult.tableau, problem.constraintNames)
-      setAnalysis(analysisResult)
+      const analysisResult = analyzeTableau(
+        solutionResult.tableau,
+        problem.constraintNames
+      );
+      setAnalysis(analysisResult);
 
-      setError(null)
-      setActiveTab("solution")
+      setError(null);
+      setActiveTab("solution");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao resolver o problema")
-      setSolution(null)
-      setAnalysis(null)
+      setError(
+        err instanceof Error ? err.message : "Erro ao resolver o problema"
+      );
+      setSolution(null);
+      setAnalysis(null);
     }
-  }
+  };
 
   const handleChangeProblem = (changeProblem: ChangeProblem) => {
     try {
       if (solution) {
-        const result = changeSimplex(solution, changeProblem)
-        setChangeSolution(result)
-        setActiveTab("change-solution")
+        const result = changeSimplex(
+          solution,
+          changeProblem,
+          problem?.constraintNames || []
+        );
+        setChangeSolution(result);
+        setActiveTab("change-solution");
       }
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao resolver o problema")
-
+      setError(
+        err instanceof Error ? err.message : "Erro ao resolver o problema"
+      );
     }
-  }
+  };
 
   const handleLoadExample = () => {
-    const exampleProblem = getVenixProblem()
-    setProblem(exampleProblem)
-    setActiveTab("problem")
-  }
+    const exampleProblem = getVenixProblem();
+    setProblem(exampleProblem);
+    setActiveTab("problem");
+  };
 
   return (
     <div className="space-y-6">
@@ -95,7 +110,10 @@ export function SimplexSolver() {
           <TabsTrigger value="change" disabled={!solution}>
             Alterar Recursos
           </TabsTrigger>
-          <TabsTrigger value="change-solution" disabled={!solution || !changeSolution}>
+          <TabsTrigger
+            value="change-solution"
+            disabled={!solution || !changeSolution}
+          >
             Solução da Alteração
           </TabsTrigger>
         </TabsList>
@@ -106,11 +124,15 @@ export function SimplexSolver() {
         </TabsContent>
 
         <TabsContent value="change" className="space-y-6">
-          {problem && <ChangeForm onSubmit={handleChangeProblem} problem={problem} />}
+          {problem && (
+            <ChangeForm onSubmit={handleChangeProblem} problem={problem} />
+          )}
         </TabsContent>
 
         <TabsContent value="solution">
-          {solution && problem && <SolutionDisplay solution={solution} problem={problem} />}
+          {solution && problem && (
+            <SolutionDisplay solution={solution} problem={problem} />
+          )}
         </TabsContent>
 
         <TabsContent value="tableau">
@@ -125,14 +147,20 @@ export function SimplexSolver() {
 
         <TabsContent value="analysis">
           {analysis && problem && solution && (
-            <AnalysisDisplay analysis={analysis} problem={problem} solution={solution} />
+            <AnalysisDisplay
+              analysis={analysis}
+              problem={problem}
+              solution={solution}
+            />
           )}
         </TabsContent>
 
         <TabsContent value="change-solution" className="space-y-6">
-          {changeSolution && <ChangeAnalysisDisplay changeSolution={changeSolution} />}
+          {changeSolution && (
+            <ChangeAnalysisDisplay changeSolution={changeSolution} />
+          )}
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
